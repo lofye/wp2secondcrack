@@ -10,6 +10,6 @@ composer update
 php convert.php
 ```
 You should see a message like:
-    Exported 6 pages and 792 posts from /Users/derekmartin/Documents/websites/sdm/derekmartinca.wordpress.2017-03-16.xml
-    
+Exported 6 pages and 792 posts from /websites/wp2secondcrack/derekmartinca.wordpress.2017-03-16.xml
+
 That's it - you should now have year/month/day directories full of markdown files.
