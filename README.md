@@ -11,4 +11,4 @@ php convert.php http://www.yourdomain.xyz your-xml-export-filename.xml
 You should see a message like:
 Exported 6 pages and 792 posts from derekmartinca.wordpress.2017-03-16.xml
 
-That's it - you should now have year/month/day directories full of markdown files.
+That's it - you should now have "wordpress-content/year/month/day/" directories full of markdown files.
