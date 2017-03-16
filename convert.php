@@ -1,6 +1,11 @@
 <?php
 
-$your_domain = 'http://www.derekmartin.ca/';//make sure you leave the trailing / at the end
+if(!isset($argv[1]) || !isset($argv[2])){
+	echo "You must pass in your domain as the first parameter and your xml filename as the second parameter, like:\r\n
+php convert.php http://www.derekmartin.ca derekmartinca.wordpress.2017-03-16.xml"
+}
+$your_domain = $argv[1].'/';
+$your_xml = $argv[2];
 
 ini_set('max_execution_time', '1');
 ini_set('display_errors', '1');
@@ -68,13 +73,13 @@ function title_case($title)
 $export_count = array();
 $export_count['pages'] = 0;
 $export_count['posts'] = 0;
-$files = array();
-foreach (glob(__DIR__ . "/*.xml") as $file) {
-    $files[] = $file;
-}
-$file = $files[0];
 
-if (file_exists($file)) {
+$container_dir = 'wordpress-content';
+if (!is_dir($container_dir)) {
+    mkdir($container_dir);
+}
+
+if (file_exists($your_file)) {
     $xml = simplexml_load_file($file);
 
     foreach ($xml->channel->item as $item) {
@@ -100,7 +105,7 @@ if (file_exists($file)) {
 
         if (!is_numeric($md_filename[0])) {
             //e.g. f-a-q, or ?p=872
-            $dir = 'pages';
+            $dir = $container_dir.'/pages';
             if (!is_dir($dir)) {
                 mkdir($dir);
             }
@@ -123,16 +128,16 @@ if (file_exists($file)) {
             $month = $md_filename[1];
             $day = $md_filename[2];
             $md_filename = $md_filename[$last_piece] . '.md';//could use [3] instead of $last_piece
-            if (!is_dir($year)) {
-                mkdir($year);
+            if (!is_dir($container_dir.'/'.$year)) {
+                mkdir($container_dir.'/'.$year);
             }
-            if (!is_dir($year . '/' . $month)) {
-                mkdir($year . '/' . $month);
+            if (!is_dir($container_dir.'/'.$year . '/' . $month)) {
+                mkdir($container_dir.'/'.$year . '/' . $month);
             }
-            if (!is_dir($year . '/' . $month . '/' . $day)) {
-                mkdir($year . '/' . $month . '/' . $day);
+            if (!is_dir($container_dir.'/'.$year . '/' . $month . '/' . $day)) {
+                mkdir($container_dir.'/'.$year . '/' . $month . '/' . $day);
             }
-            $dir = $year . '/' . $month . '/' . $day;
+            $dir = $container_dir.'/'.$year . '/' . $month . '/' . $day;
 
             $fi = new FilesystemIterator($dir, FilesystemIterator::SKIP_DOTS);
             $file_count = iterator_count($fi) + 1;
