@@ -1,15 +1,14 @@
 <?php
 
-if(!isset($argv[1]) || !isset($argv[2])){
-	echo "You must pass in your domain as the first parameter and your xml filename as the second parameter, like:\r\n
-php convert.php http://www.derekmartin.ca derekmartinca.wordpress.2017-03-16.xml"
+if (!isset($argv[1]) || !isset($argv[2])) {
+    exit("You must pass in your domain as the first parameter and your xml filename as the second parameter, like:\r\nphp convert.php http://www.derekmartin.ca derekmartinca.wordpress.2017-03-16.xml\r\n\r\n");
 }
-$your_domain = $argv[1].'/';
+$your_domain = $argv[1] . '/';
 $your_xml = $argv[2];
 
 ini_set('max_execution_time', '1');
 ini_set('display_errors', '1');
-ini_set('memory_limit', '500000000');
+ini_set('memory_limit', '50M');
 
 require 'vendor/autoload.php';
 
@@ -21,7 +20,7 @@ use League\HTMLToMarkdown\HtmlConverter;
 function title_case($title)
 {
     //remove HTML, storing it for later
-    //       HTML elements to ignore    | tags  | entities
+    //HTML elements to ignore    | tags  | entities
     $regx = '/<(code|var)[^>]*>.*?<\/\1>|<[^>]+>|&\S+;/';
     preg_match_all($regx, $title, $html, PREG_OFFSET_CAPTURE);
     $title = preg_replace($regx, '', $title);
@@ -79,8 +78,8 @@ if (!is_dir($container_dir)) {
     mkdir($container_dir);
 }
 
-if (file_exists($your_file)) {
-    $xml = simplexml_load_file($file);
+if (file_exists($your_xml)) {
+    $xml = simplexml_load_file($your_xml);
 
     foreach ($xml->channel->item as $item) {
         ob_start();
@@ -105,7 +104,7 @@ if (file_exists($your_file)) {
 
         if (!is_numeric($md_filename[0])) {
             //e.g. f-a-q, or ?p=872
-            $dir = $container_dir.'/pages';
+            $dir = $container_dir . '/pages';
             if (!is_dir($dir)) {
                 mkdir($dir);
             }
@@ -128,16 +127,16 @@ if (file_exists($your_file)) {
             $month = $md_filename[1];
             $day = $md_filename[2];
             $md_filename = $md_filename[$last_piece] . '.md';//could use [3] instead of $last_piece
-            if (!is_dir($container_dir.'/'.$year)) {
-                mkdir($container_dir.'/'.$year);
+            if (!is_dir($container_dir . '/' . $year)) {
+                mkdir($container_dir . '/' . $year);
             }
-            if (!is_dir($container_dir.'/'.$year . '/' . $month)) {
-                mkdir($container_dir.'/'.$year . '/' . $month);
+            if (!is_dir($container_dir . '/' . $year . '/' . $month)) {
+                mkdir($container_dir . '/' . $year . '/' . $month);
             }
-            if (!is_dir($container_dir.'/'.$year . '/' . $month . '/' . $day)) {
-                mkdir($container_dir.'/'.$year . '/' . $month . '/' . $day);
+            if (!is_dir($container_dir . '/' . $year . '/' . $month . '/' . $day)) {
+                mkdir($container_dir . '/' . $year . '/' . $month . '/' . $day);
             }
-            $dir = $container_dir.'/'.$year . '/' . $month . '/' . $day;
+            $dir = $container_dir . '/' . $year . '/' . $month . '/' . $day;
 
             $fi = new FilesystemIterator($dir, FilesystemIterator::SKIP_DOTS);
             $file_count = iterator_count($fi) + 1;
@@ -165,9 +164,9 @@ if (file_exists($your_file)) {
     }
 
 } else {
-    exit('Failed to open ' . $file);
+    exit('Failed to open ' . $your_xml);
 }
 
-echo "Exported " . $export_count['pages'] . " pages and " . $export_count['posts'] . " posts from " . $file . "\r\n";
+echo "Exported " . $export_count['pages'] . " pages and " . $export_count['posts'] . " posts from " . $your_xml . "\r\n";
 
 ?>
