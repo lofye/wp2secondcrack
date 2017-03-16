@@ -1,5 +1,11 @@
 <?php
 
+$your_domain = 'http://www.derekmartin.ca/';//make sure you leave the trailing / at the end
+
+ini_set('max_execution_time', '1');
+ini_set('display_errors', '1');
+ini_set('memory_limit','500000000');
+
 require 'vendor/autoload.php';
 
 use League\HTMLToMarkdown\HtmlConverter;
@@ -59,10 +65,6 @@ function title_case ($title) {
 	return $title;
 }
 
-ini_set('max_execution_time', '1');
-ini_set('display_errors', '1');
-ini_set('memory_limit','500000000');
-
 $export_count = array();
 $export_count['pages'] = 0;
 $export_count['posts'] = 0;
@@ -70,12 +72,11 @@ $files = array();
 foreach (glob(__DIR__."/*.xml") as $file) {
   $files[] = $file;
 }
-$file = $files[0];//'derekmartinca.wordpress.2017-03-15.xml';
+$file = $files[0];
 
 if (file_exists($file)) {
     $xml = simplexml_load_file($file);
 
-    //$item = $xml->channel->item[797];
     foreach($xml->channel->item as $item)
     {
     	ob_start();
@@ -97,7 +98,7 @@ if (file_exists($file)) {
 		echo "Published: ".$item->pubDate."\r\n";//format this:  Tue, 14 Mar 2017 15:28:52 +0000   as: 2017-03-14 03:28:52pm
 		echo "Type: post"."\r\n";
 
-		$md_filename = str_replace('http://www.derekmartin.ca/','',$item->link);//grab the last part of the link, minus the trailing slash?
+		$md_filename = str_replace($your_domain,'',$item->link);
 		$md_filename = explode('/', $md_filename);
 
 		if(!is_numeric($md_filename[0]))
