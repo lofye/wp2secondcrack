@@ -345,7 +345,7 @@ if (file_exists($your_xml)) {
                 {
                     if(isset($comment->comment_author_url) && !empty(trim($comment->comment_author_url)))
                     {
-                        $comment->comment_author = "(".$comment->comment_author.")[".$comment->comment_author_url."]";
+                        $comment->comment_author = "[".$comment->comment_author."](".$comment->comment_author_url.")";
                     }
                     echo "*".$comment->comment_author." said:*\r\n> ".(string)$comment->comment_content."\r\n".$comment->comment_date_gmt."\r\n\r\n";
                 }
